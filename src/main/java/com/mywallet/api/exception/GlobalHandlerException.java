@@ -30,7 +30,7 @@ public class GlobalHandlerException {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ExceptionResponseDto> handleGeneralException(Exception exception) {
         ExceptionResponseDto response = new ExceptionResponseDto(
-            HttpStatus.BAD_REQUEST.value(),
+            HttpStatus.INTERNAL_SERVER_ERROR.value(),
             exception.getMessage()
         );
 

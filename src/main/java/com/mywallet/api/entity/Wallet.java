@@ -16,8 +16,11 @@ import java.math.BigDecimal;
 public class Wallet {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(name = "id", nullable = false)
     public Long id;
+
+    @Column(name = "balance", nullable = false)
     public BigDecimal balance;
 
     @OneToOne

@@ -1,8 +1,8 @@
 package com.mywallet.api.controller;
 
 import com.mywallet.api.dto.ResponseDto;
-import com.mywallet.api.dto.WalletDepositDto;
-import com.mywallet.api.dto.WalletTransferDto;
+import com.mywallet.api.dto.wallet.WalletDepositDto;
+import com.mywallet.api.dto.wallet.WalletPaymentDto;
 import com.mywallet.api.service.WalletService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -38,21 +38,17 @@ public class WalletController {
         ));
     }
 
-    @Operation( summary = "Realize a transfer between two wallets",
-                description = "Send an amount of money from a wallet to another",
-                tags = "Transfer")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Transfer realized with success!"),
+        @ApiResponse(responseCode = "200", description = "Payment realized with success!"),
         @ApiResponse(responseCode = "404", description = "Wallet not found"),
-        @ApiResponse(responseCode = "404", description = "Destiny wallet not found"),
-        @ApiResponse(responseCode = "404", description = "Not enough balance"),
+        @ApiResponse(responseCode = "400", description = "Not enough balance")
     })
-    @PostMapping("/transfer")
-    public ResponseEntity<ResponseDto> transfer(@Valid @RequestBody WalletTransferDto walletTransferDto) {
-        this.walletService.transfer(walletTransferDto);
+    @PostMapping("/payment")
+    public ResponseEntity<ResponseDto> payment(@Valid @RequestBody WalletPaymentDto walletPaymentDto) {
+        walletService.payment(walletPaymentDto);
         return ResponseEntity.status(HttpStatus.OK).body(new ResponseDto(
             HttpStatus.OK.value(),
-            "Transfer realized with success!"
+            "Payment realized with success!"
         ));
     }
 }

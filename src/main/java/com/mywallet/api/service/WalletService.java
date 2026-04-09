@@ -1,44 +1,34 @@
 package com.mywallet.api.service;
 
-import com.mywallet.api.dto.WalletDepositDto;
-import com.mywallet.api.dto.WalletTransferDto;
+import com.mywallet.api.dto.wallet.WalletDepositDto;
+import com.mywallet.api.dto.wallet.WalletPaymentDto;
 import com.mywallet.api.entity.Wallet;
-import com.mywallet.api.exception.DestinyWalletNotFound;
-import com.mywallet.api.exception.NotEnoughBalanceException;
 import com.mywallet.api.exception.WalletNotFoundException;
 import com.mywallet.api.repository.WalletRepository;
-import io.swagger.v3.oas.annotations.Operation;
-import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
-import java.math.BigDecimal;
 
 @Service
 public class WalletService {
 
     public WalletRepository walletRepository;
+    public WalletTransactionService walletTransactionService;
 
-    public WalletService(WalletRepository walletRepository) {
+    public WalletService(WalletRepository walletRepository, WalletTransactionService walletTransactionService) {
         this.walletRepository = walletRepository;
+        this.walletTransactionService = walletTransactionService;
     }
 
     public void deposit(WalletDepositDto walletDepositDto) {
-        Wallet wallet = walletRepository.findById(walletDepositDto.id_wallet()).orElseThrow(WalletNotFoundException::new);
+        Wallet wallet = walletRepository.findById(walletDepositDto.wallet_id()).orElseThrow(WalletNotFoundException::new);
         wallet.setBalance(wallet.getBalance().add(walletDepositDto.amount()));
         walletRepository.save(wallet);
+        walletTransactionService.storeDepositWalletTransaction(wallet, walletDepositDto);
     }
 
-    @Transactional
-    public void transfer(WalletTransferDto walletTransferDto) {
-        Wallet wallet = walletRepository.findById(walletTransferDto.id_wallet()).orElseThrow(WalletNotFoundException::new);
-        Wallet destinyWallet = walletRepository.findById(walletTransferDto.id_wallet_destiny()).orElseThrow(DestinyWalletNotFound::new);
-
-        if (wallet.getBalance().subtract(walletTransferDto.amount()).compareTo(new BigDecimal(0)) < 0) {
-            throw new NotEnoughBalanceException();
-        }
-
-        destinyWallet.setBalance(destinyWallet.getBalance().add(walletTransferDto.amount()));
-        wallet.setBalance(wallet.getBalance().add(walletTransferDto.amount()));
-        walletRepository.save(destinyWallet);
+    public void payment(WalletPaymentDto walletPaymentDto) {
+        Wallet wallet = walletRepository.findById(walletPaymentDto.wallet_id()).orElseThrow(WalletNotFoundException::new);
+        wallet.setBalance(wallet.getBalance().subtract(walletPaymentDto.amount()));
         walletRepository.save(wallet);
+        walletTransactionService.storePaymentWalletTransaction(wallet, walletPaymentDto);
     }
 }

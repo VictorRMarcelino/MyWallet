@@ -1,6 +1,6 @@
 package com.mywallet.api.interfaces;
 
-import com.mywallet.api.dto.UserRegisterDto;
+import com.mywallet.api.dto.user.UserRegisterDto;
 import com.mywallet.api.entity.User;
 import org.mapstruct.Mapper;
 

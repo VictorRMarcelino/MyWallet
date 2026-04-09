@@ -1,4 +1,4 @@
-package com.mywallet.api.dto;
+package com.mywallet.api.dto.user;
 
 public record UserRegisterDto (
     String email,

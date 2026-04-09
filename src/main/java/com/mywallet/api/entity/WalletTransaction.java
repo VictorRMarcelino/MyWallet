@@ -16,13 +16,19 @@ public class WalletTransaction {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "id", nullable = false)
     Long id;
 
     @ManyToOne
     @JoinColumn(name = "wallet_id")
-    Wallet wallet;
+    Wallet wallet_id;
 
+    @Column(name = "type", nullable = false)
     int type;
 
+    @Column(name = "description", length = 100)
     String description;
+
+    @Column(name = "created_at", nullable = false, length = 20)
+    String created_at;
 }
