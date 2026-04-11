@@ -11,6 +11,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.context.SpringBootTest;
 import java.math.BigDecimal;
+import java.util.Optional;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -29,7 +30,7 @@ public class WalletServiceTest {
     @Test
     void testWalletNotFound() {
         UUID uuid = UUID.randomUUID();
-        when(walletRepository.findById(uuid)).thenReturn(null);
+        when(walletRepository.findById(uuid)).thenReturn(Optional.empty());
         WalletDepositDto walletDepositDto = new WalletDepositDto(uuid,new BigDecimal(10));
         assertThrows(WalletNotFoundException.class, () -> walletService.deposit(walletDepositDto));
     }
