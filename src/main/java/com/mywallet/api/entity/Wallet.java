@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import java.math.BigDecimal;
+import java.util.UUID;
 
 @Table (name = "wallet")
 @Entity
@@ -18,12 +19,12 @@ public class Wallet {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id", nullable = false)
-    public Long id;
+    private UUID id;
 
     @Column(name = "balance", nullable = false)
-    public BigDecimal balance;
+    private BigDecimal balance;
 
     @OneToOne
     @JoinColumn(name = "user_id")
-    User user;
+    private User user;
 }
