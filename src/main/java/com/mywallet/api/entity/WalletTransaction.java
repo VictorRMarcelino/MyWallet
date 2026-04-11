@@ -1,10 +1,15 @@
 package com.mywallet.api.entity;
 
+import com.mywallet.api.enums.WalletTransactionEnum;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.time.OffsetDateTime;
+import java.time.temporal.ChronoUnit;
+import java.util.UUID;
 
 @Entity
 @Table(name = "wallettransaction")
@@ -15,20 +20,25 @@ import lombok.Setter;
 public class WalletTransaction {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id", nullable = false)
-    Long id;
+    private UUID id;
 
     @ManyToOne
     @JoinColumn(name = "wallet_id")
-    Wallet wallet_id;
+    private Wallet wallet_id;
 
     @Column(name = "type", nullable = false)
-    int type;
+    private WalletTransactionEnum type;
 
     @Column(name = "description", length = 100)
-    String description;
+    private String description;
 
     @Column(name = "created_at", nullable = false, length = 20)
-    String created_at;
+    private OffsetDateTime created_at;
+
+    @PrePersist
+    protected void onCreate() {
+        this.created_at = OffsetDateTime.now().truncatedTo(ChronoUnit.SECONDS);
+    }
 }

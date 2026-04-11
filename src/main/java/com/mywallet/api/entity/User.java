@@ -9,7 +9,7 @@ import lombok.Setter;
 import java.util.UUID;
 
 @Entity
-@Table(name = "user")
+@Table(name = "users")
 @Getter
 @Setter
 @AllArgsConstructor
@@ -19,14 +19,14 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id", nullable = false, updatable = false)
-    UUID id;
+    private UUID id;
 
     @Column(name = "password", nullable = false, updatable = true, length = 50)
-    String password;
+    private String password;
 
     @Column(name = "email", nullable = false, updatable = true, length = 100)
-    String email;
+    private String email;
 
     @Column(name = "username", nullable = false, updatable = true, length = 100)
-    String username;
+    private String username;
 }

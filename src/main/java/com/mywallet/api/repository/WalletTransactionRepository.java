@@ -9,7 +9,4 @@ import java.util.List;
 import java.util.UUID;
 
 @Repository
-public interface WalletTransactionRepository extends JpaRepository<WalletTransaction, Long> {
-
-    List<WalletTransaction> findByWalletId(@Param("wallet_id") UUID wallet_id);
-}
+public interface WalletTransactionRepository extends JpaRepository<WalletTransaction, Long> {}
