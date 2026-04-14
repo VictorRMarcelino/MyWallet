@@ -29,4 +29,7 @@ public class User {
 
     @Column(name = "username", nullable = false, updatable = true, length = 100)
     private String username;
+
+    @Column(name = "email_verified", nullable = false, updatable = true)
+    private Integer emailVerified;
 }
