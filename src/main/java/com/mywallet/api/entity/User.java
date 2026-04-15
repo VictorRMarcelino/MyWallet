@@ -1,5 +1,6 @@
 package com.mywallet.api.entity;
 
+import com.mywallet.api.enums.UserEnum;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -31,5 +32,5 @@ public class User {
     private String username;
 
     @Column(name = "email_verified", nullable = false, updatable = true)
-    private Integer emailVerified;
+    private UserEnum emailVerified;
 }

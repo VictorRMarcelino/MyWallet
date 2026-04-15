@@ -1,5 +1,6 @@
 package com.mywallet.api.service;
 
+import com.mywallet.api.configuration.JwtTokenProvider;
 import com.mywallet.api.configuration.SecurityConfig;
 import com.mywallet.api.dto.user.UserLoginDto;
 import com.mywallet.api.dto.user.UserRegisterDto;
@@ -18,18 +19,20 @@ public class UserService {
     UserRepository userRepository;
     UserMapper userMapper;
     EmailService emailService;
+    JwtTokenProvider jwtTokenProvider;
 
-    public UserService(SecurityConfig securityConfig, UserRepository userRepository, UserMapper userMapper, EmailService emailService) {
+    public UserService(SecurityConfig securityConfig, UserRepository userRepository, UserMapper userMapper, EmailService emailService, JwtTokenProvider jwtTokenProvider) {
         this.securityConfig = securityConfig;
         this.userRepository = userRepository;
         this.userMapper = userMapper;
         this.emailService = emailService;
+        this.jwtTokenProvider = jwtTokenProvider;
     }
 
     public void register(UserRegisterDto userRegisterDto) {
         User user = userMapper.fromRegisterDtotoUser(userRegisterDto);
         user.setPassword(securityConfig.passwordEncoder().encode(userRegisterDto.password()));
-        user.setEmailVerified(UserEnum.EMAIL_NOT_VERIFIED.value);
+        user.setEmailVerified(UserEnum.EMAIL_NOT_VERIFIED);
         userRepository.save(user);
         this.sendEmailVerification(user);
     }
@@ -45,17 +48,19 @@ public class UserService {
         emailService.sendEmail(user.getEmail(), emailSubject, emailBody);
     }
 
-    public void login (UserLoginDto userLoginDto) {
+    public String login (UserLoginDto userLoginDto) {
         User user = userRepository.findByEmail(userLoginDto.email()).orElseThrow(() -> new UserNotFoundForEmail(userLoginDto.email()));
 
         if (!securityConfig.passwordEncoder().matches(userLoginDto.password(), user.getPassword())) {
             throw new UserEmailPasswordIncorrect();
         }
+
+        return jwtTokenProvider.generateToken(user.getEmail());
     }
 
     public void verifyEmail(java.util.UUID userId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundForEmail("User not found"));
-        user.setEmailVerified(UserEnum.EMAIL_VERIFIED.value);
+        user.setEmailVerified(UserEnum.EMAIL_VERIFIED);
         userRepository.save(user);
     }
 }
