@@ -5,6 +5,7 @@ import com.mywallet.api.configuration.SecurityConfig;
 import com.mywallet.api.dto.user.UserLoginDto;
 import com.mywallet.api.dto.user.UserRegisterDto;
 import com.mywallet.api.entity.User;
+import com.mywallet.api.entity.Wallet;
 import com.mywallet.api.enums.UserEnum;
 import com.mywallet.api.exception.user.UserEmailPasswordIncorrect;
 import com.mywallet.api.exception.user.UserNotFoundForEmail;
@@ -20,13 +21,20 @@ public class UserService {
     UserMapper userMapper;
     EmailService emailService;
     JwtTokenProvider jwtTokenProvider;
+    WalletService walletService;
 
-    public UserService(SecurityConfig securityConfig, UserRepository userRepository, UserMapper userMapper, EmailService emailService, JwtTokenProvider jwtTokenProvider) {
+    public UserService(SecurityConfig securityConfig,
+                       UserRepository userRepository,
+                       UserMapper userMapper,
+                       EmailService emailService,
+                       JwtTokenProvider jwtTokenProvider,
+                       WalletService walletService) {
         this.securityConfig = securityConfig;
         this.userRepository = userRepository;
         this.userMapper = userMapper;
         this.emailService = emailService;
         this.jwtTokenProvider = jwtTokenProvider;
+        this.walletService = walletService;
     }
 
     public void register(UserRegisterDto userRegisterDto) {
@@ -34,6 +42,7 @@ public class UserService {
         user.setPassword(securityConfig.passwordEncoder().encode(userRegisterDto.password()));
         user.setEmailVerified(UserEnum.EMAIL_NOT_VERIFIED);
         userRepository.save(user);
+        walletService.createWallet(user);
         this.sendEmailVerification(user);
     }
 
