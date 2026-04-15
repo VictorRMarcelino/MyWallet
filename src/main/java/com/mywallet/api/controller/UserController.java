@@ -9,6 +9,7 @@ import com.mywallet.api.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -33,7 +34,7 @@ public class UserController {
         @ApiResponse(responseCode = "400", description = "Invalid request data")
     })
     @PostMapping("/register")
-    public ResponseEntity<UserRegisterResponseDto> register(@RequestBody UserRegisterDto userRegisterDto) {
+    public ResponseEntity<UserRegisterResponseDto> register(@RequestBody @Valid UserRegisterDto userRegisterDto) {
         userService.register(userRegisterDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(new UserRegisterResponseDto(
             "User registered with success! Please verify your email."
@@ -49,7 +50,7 @@ public class UserController {
         @ApiResponse(responseCode = "404", description = "User not found")
     })
     @PostMapping("/login")
-    public ResponseEntity<UserLoginResponseDto> login(@RequestBody UserLoginDto userLoginDto) {
+    public ResponseEntity<UserLoginResponseDto> login(@RequestBody @Valid UserLoginDto userLoginDto) {
         String token = userService.login(userLoginDto);
         return ResponseEntity.status(HttpStatus.OK).body(new UserLoginResponseDto(
             token,

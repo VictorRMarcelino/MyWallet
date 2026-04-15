@@ -8,6 +8,9 @@ import com.mywallet.api.enums.WalletTransactionEnum;
 import com.mywallet.api.repository.WalletTransactionRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.UUID;
+
 @Service
 public class WalletTransactionService {
 
@@ -15,6 +18,10 @@ public class WalletTransactionService {
 
     WalletTransactionService(WalletTransactionRepository walletTransactionRepository) {
         this.walletTransactionRepository = walletTransactionRepository;
+    }
+
+    public List<WalletTransaction> getLastTransactions(UUID walletId) {
+        return walletTransactionRepository.getWalletLastTransactions(walletId);
     }
 
     public void storeDepositWalletTransaction(Wallet wallet, WalletDepositDto walletDepositDto) {
@@ -31,6 +38,7 @@ public class WalletTransactionService {
         WalletTransaction walletTransaction = new WalletTransaction();
         walletTransaction.setType(type);
         walletTransaction.setDescription(description);
+        walletTransaction.setWallet_id(wallet);
         walletTransactionRepository.save(walletTransaction);
     }
 }

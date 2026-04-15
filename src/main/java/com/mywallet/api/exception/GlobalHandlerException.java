@@ -27,6 +27,15 @@ public class GlobalHandlerException {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST.value()).body(response);
     }
 
+    @ExceptionHandler(UnauthorizedException.class)
+    public ResponseEntity<ExceptionResponseDto> handleUnauthorizedException(UnauthorizedException exception) {
+        ExceptionResponseDto response = new ExceptionResponseDto(
+            HttpStatus.UNAUTHORIZED.value(),
+            exception.getMessage()
+        );
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED.value()).body(response);
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ExceptionResponseDto> handleGeneralException(Exception exception) {
         ExceptionResponseDto response = new ExceptionResponseDto(

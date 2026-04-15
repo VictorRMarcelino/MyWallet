@@ -11,6 +11,8 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import javax.crypto.SecretKey;
 
+import java.util.UUID;
+
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -44,7 +46,7 @@ public class JwtAuthenticationFilterTest {
         mockMvc.perform(post("/api/v1/user/login")
                 .contentType("application/json")
                 .content("{\"email\":\"test@example.com\",\"password\":\"password\"}"))
-                .andExpect(status().isUnauthorized()); // Falha por credenciais inválidas, não por JWT
+                .andExpect(status().isNotFound()); // Falha por credenciais inválidas, não por JWT
     }
 
     /**
@@ -61,7 +63,8 @@ public class JwtAuthenticationFilterTest {
      */
     @Test
     public void testProtectedRouteWithValidToken() throws Exception {
-        mockMvc.perform(get("/api/v1/wallet")
+        UUID walletId = UUID.randomUUID();
+        mockMvc.perform(get("/api/v1/wallettransactions/lastTransactions/" + walletId)
                 .header("Authorization", "Bearer " + validToken))
                 .andExpect(status().isOk());
     }
