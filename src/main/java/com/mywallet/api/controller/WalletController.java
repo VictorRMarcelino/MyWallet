@@ -29,7 +29,7 @@ public class WalletController {
         @ApiResponse(responseCode = "200", description = "Deposit realized with success!"),
         @ApiResponse(responseCode = "404", description = "Wallet not found"),
     })
-    @PutMapping("/deposit")
+    @PostMapping("/deposit")
     public ResponseEntity<ResponseDto> deposit(@Valid @RequestBody WalletDepositDto walletDepositDto) {
         this.walletService.deposit(walletDepositDto);
         return ResponseEntity.status(HttpStatus.OK).body(new ResponseDto(

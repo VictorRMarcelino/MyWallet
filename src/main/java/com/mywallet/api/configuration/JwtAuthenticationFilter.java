@@ -62,8 +62,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     }
 
     private boolean isPublicRoute(String requestPath) {
-        return requestPath.contains("/api/v1/user/register") ||
-               requestPath.contains("/api/v1/user/login") ||
+        return requestPath.contains("/api/v1/auth/register") ||
+               requestPath.contains("/api/v1/auth/login") ||
                requestPath.contains("/api/v1/user/verify-email") ||
                requestPath.contains("/swagger-ui") ||
                requestPath.contains("/v3/api-docs") ||

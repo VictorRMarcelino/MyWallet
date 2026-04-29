@@ -25,12 +25,12 @@ public class WalletTransactionService {
     }
 
     public void storeDepositWalletTransaction(Wallet wallet, WalletDepositDto walletDepositDto) {
-        String description = String.format("%f deposited with sucess!", walletDepositDto.amount());
+        String description = String.format("%f.2f deposited with sucess!", walletDepositDto.amount());
         this.storeWalletTransaction(wallet, WalletTransactionEnum.TYPE_DEPOSIT, description);
     }
 
     public void storePaymentWalletTransaction(Wallet wallet, WalletPaymentDto walletPaymentDto) {
-        String description = String.format("%f payed with sucess!");
+        String description = String.format("%f.2f payed with sucess!");
         this.storeWalletTransaction(wallet, WalletTransactionEnum.TYPE_PAYMENT, description);
     }
 

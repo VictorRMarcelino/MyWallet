@@ -6,6 +6,7 @@ import com.mywallet.api.entity.User;
 import com.mywallet.api.entity.Wallet;
 import com.mywallet.api.exception.WalletNotFoundException;
 import com.mywallet.api.repository.WalletRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -36,6 +37,7 @@ public class WalletService {
      * Deposit a specified amount into the wallet identified by wallet_id. If the wallet is not found, a WalletNotFoundException is thrown.
      * @param walletDepositDto Data transfer object containing the wallet_id and the amount to be deposited
      */
+    @Transactional
     public void deposit(WalletDepositDto walletDepositDto) {
         Wallet wallet = walletRepository.findById(walletDepositDto.wallet_id()).orElseThrow(WalletNotFoundException::new);
         wallet.setBalance(wallet.getBalance().add(walletDepositDto.amount()));
@@ -47,6 +49,7 @@ public class WalletService {
      * Process a payment by deducting a specified amount from the wallet identified by wallet_id. If the wallet is not found, a WalletNotFoundException is thrown.
      * @param walletPaymentDto Data transfer object containing the wallet_id and the amount to be paid
      */
+    @Transactional
     public void payment(WalletPaymentDto walletPaymentDto) {
         Wallet wallet = walletRepository.findById(walletPaymentDto.wallet_id()).orElseThrow(WalletNotFoundException::new);
         wallet.setBalance(wallet.getBalance().subtract(walletPaymentDto.amount()));

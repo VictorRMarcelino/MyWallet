@@ -28,7 +28,7 @@ public class WalletTransaction {
     @JoinColumn(name = "wallet_id")
     private Wallet wallet_id;
 
-    @Column(name = "type", nullable = false)
+    @Column(name = "type", nullable = false, columnDefinition = "smallint")
     private WalletTransactionEnum type;
 
     @Column(name = "description", length = 100)
